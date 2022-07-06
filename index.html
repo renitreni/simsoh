@@ -9,8 +9,7 @@
 
   <title>SIM-SOH</title>
   <meta name="description" content="SIM-SOH INTERNATIONAL SERVICES, INC.">
-  <meta name="keywords"
-    content="simsoh,agency,landbase,ofw,job,work,internationl,services,poea">
+  <meta name="keywords" content="simsoh,agency,landbase,ofw,job,work,internationl,services,poea">
 
   <link href="https://fonts.googleapis.com/css?family=Crimson+Text:400,400i,600|Montserrat:200,300,400"
     rel="stylesheet">
@@ -63,22 +62,49 @@
   <section class="pb_cover_v1 text-left cover-bg-black cover-bg-opacity-4 parallax"
     style="background-image: url(assets/images/simsohbg.jpg)" id="section-home">
     <div class="container">
-      <div class="row align-items-center justify-content-end">
-        <div class="col-md-6  order-md-1">
-
+      <div class="row align-items-center">
+        <div class="col-md-12 order-md-1">
           <h2 class="heading mb-3 shadow strong">SIM-SOH INTERNATIONAL SERVICES, INC.</h2>
           <div class="sub-heading">
             <p class="mb-5">Landbase Agency Since May of 1993</p>
-            <p><a href="#section-contact" role="button"
-                class="btn smoothscroll pb_outline-light btn-xl pb_font-13 p-4 rounded-0 pb_letter-spacing-2">Contact
-                Us</a></p>
+            <p>
+              <div class="d-flex fle-row">
+                <input class="form-control" v-model="code"/>
+                <a href="#" role="button" v-on:click="showModal"
+                  class="btn smoothscroll pb_outline-light btn-xl pb_font-13 p-4 rounded-0 pb_letter-spacing-2">Check
+                  Status</a>
+              </div>
+            </p>
           </div>
-
         </div>
       </div>
     </div>
   </section>
   <!-- END section -->
+
+  <div id="statusModal" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">My Application Status</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="d-flex">
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item" v-for="item in status">{{ item.name.en }}</li>
+            </ul>
+          </div>
+           <!-- 6X5G070622 -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <section class="pb_section pb_section_v1" data-section="about" id="section-about">
     <div class="container">
@@ -379,16 +405,32 @@
   <script src="assets/lightbox/js/lightbox.js"></script>
 
   <script type="text/javascript">
-
-//<![CDATA[
+    //<![CDATA[
 
     const {
       createApp
     } = Vue
 
     createApp({
+      methods: {
+        showModal() {
+          let $this = this;
+          $.ajax({
+            url: 'https://access.poloksa-ph.com/api/candidate/status/' + this.code,
+            success(value) {
+              $this.status = value.status
+              $('#statusModal').modal('show');
+            }, 
+            error(value){
+              alert('Sorry! No Data Found!');
+            }
+          })
+        }
+      },
       data() {
         return {
+          code: '',
+          status: {},
           services: [{
               'id': 'accord1',
               'title': 'Household Workers',
@@ -552,7 +594,7 @@
       }
     }).mount('#app')
 
-//]]>
+    //]]>
   </script>
 </body>
 
